@@ -1,52 +1,43 @@
 use std::collections::HashMap;
 
-struct Word {
-    word : String,
-    length : usize,
-    count : usize,
-    follow_words : HashMap<String, u32>,
-}
-
-impl Word {
-
-    fn new(word: String, length: usize, next_word: String) -> Word {
-        Word { word, 
-            length, 
-            count: 1, 
-            follow_words: HashMap::from([(next_word, 1)]),
-        }
-    }
-
-    fn update(&mut self, next_word: String) {
-        self.count += 1;
-
-        let n = &next_word.clone();
-        if self.follow_words.contains_key(n) {
-            self.follow_words.insert(next_word, self.follow_words.get(n).unwrap() + 1);
-        } else {
-            self.follow_words.insert(next_word, 1);
-        }
-    }
-}
-
-// equality only checks for the string
-impl PartialEq for Word {
-    fn eq(&self, other: &Self) -> bool {
-        self.word == other.word
-    }
-}
-
-struct Text {
-    words : Vec<Word>,
+pub struct Text {
+    pub follow_freq : HashMap<String, HashMap<String, usize>>,
+    pub count : HashMap<String, usize>,
 }
 
 impl Text {
-    fn new() -> Text {
-        Text { words : Vec::new() }
+    pub fn new() -> Text {
+        Text { follow_freq: HashMap::new(), count: HashMap::new() }
     }
 
-    fn register(&self, word: String, next_word: String) {
-        
+    fn register_count(&mut self, word: String) {
+        if let Some(x) = self.count.get_mut(&word) {
+            *x = x.clone() + 1;
+        } else {
+            self.count.insert(word.clone(), 1);
+        }
     }
 
+    fn register_freq(&mut self, word: String, follow_word: String) {
+        if let Some(x) = self.follow_freq.get_mut(&word) {
+            if let Some(y) = x.get_mut(&follow_word) {
+                *y = y.clone() + 1;
+            } else {
+                x.insert(follow_word, 1);
+            }
+        } else {
+            self.follow_freq.insert(word, HashMap::from([(follow_word, 1)]));
+        }
+    }
+
+    pub fn register_words(&mut self, words: Vec<String>) {
+        for i in 0..words.len()-1 {
+            let word = words.get(i).unwrap();
+            let follow_word = words.get(i+1).unwrap();
+            self.register_count(word.to_owned());
+            self.register_freq(word.to_owned(), follow_word.to_owned());
+        }
+
+        self.register_count(words.get(words.len()-1).unwrap().to_owned());
+    }
 }

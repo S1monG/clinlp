@@ -25,4 +25,20 @@ fn main() {
     let dir = matches.value_of("file");
 
     println!("Test 123 {:?}", dir);
+
+    small_test();
+}
+
+fn small_test() {
+
+    let input = "a a a a a b b b b";
+
+    let mut t = nlp::Text::new();
+
+    let vec: Vec<String> = input.split(" ").map(|a| a.to_owned()).collect();
+
+    t.register_words(vec);
+
+    println!("{:?}", t.count);
+    println!("{:?}", t.follow_freq);
 }
