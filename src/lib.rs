@@ -1,5 +1,3 @@
-use std::{fs, error::Error};
-
 use clap::{Arg, Command};
 
 pub fn arg_parsing() -> String {
@@ -11,7 +9,7 @@ pub fn arg_parsing() -> String {
 
     // Define the name command line option
     let name_option = Arg::new("file")
-        .short('f')   // -f
+        .short('f') // -f
         .long("file") // --file
         .takes_value(true)
         .value_name("FILENAME")
@@ -23,12 +21,4 @@ pub fn arg_parsing() -> String {
     let matches = m.get_matches();
     let dir = matches.value_of("file").unwrap();
     dir.to_owned()
-}
-
-pub fn run(dir: String) -> Result<(), Box<dyn Error>> {
-    let contents = fs::read_to_string(dir)?;
-
-    println!("With text:\n{}", contents);
-
-    Ok(())
 }
