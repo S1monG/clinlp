@@ -21,7 +21,7 @@ pub fn arg_parsing() -> String {
     let m = m.arg(name_option);
 
     let matches = m.get_matches();
-    let dir = matches.value_of("file").expect("Something went wrong with the input");
+    let dir = matches.value_of("file").unwrap();
     dir.to_owned()
 }
 
