@@ -1,9 +1,5 @@
 # clinlp
 Command line natural language processor.
 
-Run with 'cargo run -- --file <FILENAME>' or 'cargo run -- --help' if you need help.
-Or 'cargo run -release -- --file <FILENAME>' for better performance
-
-Update this REAMME when close to done.
-
-RUN CARGO CLIPPY AND CARGO FMT (FORMAT)
+Run with cargo: 'cargo run -- --file FILENAME' or 
+'cargo run -release -- --file FILENAME' for better performance
