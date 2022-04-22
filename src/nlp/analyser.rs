@@ -2,6 +2,8 @@ use super::register::Text;
 
 use std::{collections::HashMap, process};
 
+const SENTENCE_LENGTH: usize = 10;
+
 pub fn start_loop(s: String) {
     let mut text = Text::new();
 
@@ -35,6 +37,9 @@ pub fn start_loop(s: String) {
 
 fn word_statistics(count: &HashMap<String, usize>) {
     let word_count: usize = count.values().sum();
+    let most_common_word = count.iter()
+        .max_by(|a, b| b.1.cmp(a.1))
+        .unwrap().0;
     let different_words: usize = count.len();
     let average_len: f64 = count
         .iter()
@@ -43,10 +48,10 @@ fn word_statistics(count: &HashMap<String, usize>) {
         .unwrap() / word_count as f64;
 
     println!("\nThere are {} total words in the text", word_count);
-    println!("{} different words in the text", different_words);
+    println!("{} different words in the text.", different_words);
+    println!("The most common word is {}", most_common_word);
     println!("and the average length of a word is {:.2} characters", average_len);
 
-    todo!() // lägg till top 10 vanligaste ord också
 }
 
 fn follow_word_statistics(follow_freq: &HashMap<String, HashMap<String, usize>>) {
@@ -83,5 +88,24 @@ fn follow_word_statistics(follow_freq: &HashMap<String, HashMap<String, usize>>)
 }
 
 fn random_sentence_generator(follow_freq: &HashMap<String, HashMap<String, usize>>) {
-    todo!()
+
+    // starts with a random String from the hashmap
+    let mut res = follow_freq.keys().next().unwrap().to_owned();
+
+    let mut next_word = &res;
+
+    for _ in 0..SENTENCE_LENGTH {
+        let mut next: Vec<(&String, &usize)> = follow_freq
+                .get(next_word)
+                .unwrap()
+                .iter()
+                .collect();
+
+        next.sort_by(|a, b| b.1.cmp(a.1));
+        next_word = next[0/* random index från 0 tll 2 */].0;
+        res.insert_str(res.len(), next_word);
+    }
+
+    println!("Randomly generated sentence:\n{}", res);
+
 }
