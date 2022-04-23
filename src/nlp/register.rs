@@ -15,7 +15,7 @@ impl Text {
 
     fn register_count(&mut self, word: String) {
         if let Some(x) = self.count.get_mut(&word) {
-            *x = *x + 1;
+            *x += 1;
         } else {
             self.count.insert(word.clone(), 1);
         }
@@ -24,7 +24,7 @@ impl Text {
     fn register_freq(&mut self, word: String, follow_word: String) {
         if let Some(x) = self.follow_freq.get_mut(&word) {
             if let Some(y) = x.get_mut(&follow_word) {
-                *y = *y + 1;
+                *y += 1;
             } else {
                 x.insert(follow_word, 1);
             }
